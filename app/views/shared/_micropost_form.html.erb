@@ -1,7 +1,9 @@
 <%= form_for(@micropost) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
+    <div id="divcount">140 character(s) to go..</div>
     <%= f.text_area :content, placeholder: "Compose new micropost..." %>
   </div>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
 <% end %>
+<%= javascript_tag('$("#micropost_content").on("keyup keydown", function() { limitTextCount("micropost_content", "divcount", 140); })') %>
