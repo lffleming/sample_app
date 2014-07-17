@@ -7,7 +7,15 @@ class Micropost < ActiveRecord::Base
   def self.from_users_followed_by(user)
     followed_user_ids = "SELECT followed_id FROM relationships
                          WHERE follower_id = :user_id"
-    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id",
-          user_id: user.id)
+    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id OR in_reply_to = :username",
+          user_id: user.id, username: user.username)
+  end
+
+  def reply_to?
+    content.start_with?('@')
+  end
+
+  def reply_to
+    /\A@(?<uname>[^\s]+)/.match(content)[:uname] if reply_to?
   end
 end

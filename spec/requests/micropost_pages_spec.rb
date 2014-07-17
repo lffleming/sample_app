@@ -28,6 +28,17 @@ describe "Micropost pages" do
       it "should create a micropost" do
         expect { click_button "Post" }.to change(Micropost, :count).by(1)
       end
+
+      describe "with reply" do
+        before do
+         fill_in 'micropost_content', with: "@example Lorem ipsum"
+         click_button "Post"
+        end
+        let(:micropost) { Micropost.all.last}
+        it "should fill in in_reply_to field" do
+          micropost.in_reply_to.should == "example"
+        end
+      end
     end
   end
 
