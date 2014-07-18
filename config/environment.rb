@@ -3,3 +3,5 @@ require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
 SampleApp::Application.initialize!
+
+ActionMailer::Base.delivery_method = :sendmail

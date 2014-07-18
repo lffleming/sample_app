@@ -45,6 +45,7 @@ Spork.prefork do
     #     --seed 1234
     config.order = "random"
     config.include Capybara::DSL
+    EMAILS = ActionMailer::Base.deliveries
   end
 end
 
