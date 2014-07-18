@@ -16,4 +16,25 @@ describe UserMailer do
       EMAILS.last.body.encoded.should have_content("To reset your password")
     end
   end
+
+  describe "following email" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:followed_user) { FactoryGirl.create(:user) }
+    describe "with notification active" do
+      before { user.follow!(followed_user) }
+      it "should send an email" do
+        EMAILS.last.to.should include(followed_user.email)
+      end
+      it "should have proper body" do
+        EMAILS.last.body.encoded.should have_content("#{user.name} is now following you!")
+      end
+    end
+    describe "with notification inactive" do
+      let(:other_user) { FactoryGirl.create(:user, notification: false) }
+      before { user.follow!(other_user) }
+      it "should not send an email" do
+        expect(EMAILS).to be_empty
+      end
+    end
+  end
 end

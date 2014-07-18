@@ -203,6 +203,7 @@ describe "User pages" do
         fill_in "Email",            with: new_email
         fill_in "Password",         with: user.password
         fill_in "Confirm Password", with: user.password
+        uncheck "Notification"
         click_button "Save changes"
       end
 
@@ -211,6 +212,7 @@ describe "User pages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { expect(user.reload.name).to  eq new_name }
       specify { expect(user.reload.email).to eq new_email }
+      specify { expect(user.reload.notification).to eq false }
     end
 
     describe "forbidden attributes" do

@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   end
 
   def follow!(other_user)
+    UserMailer.follow_notification(other_user, self).deliver if other_user.notification?
     relationships.create!(followed_id: other_user.id)
   end
 

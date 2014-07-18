@@ -203,6 +203,21 @@ input {
   @extend .error;
 }
 
+/* Users forms */
+
+#notification {
+  display: inline;
+}
+
+#user_notification {
+  margin: 0 0 0 15px;
+}
+
+input[type=submit] {
+  display: block;
+  margin: 15px 0 0 0;
+}
+
 /* Users index */
 
 .users {
