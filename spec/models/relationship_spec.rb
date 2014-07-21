@@ -27,4 +27,16 @@ describe Relationship do
     it { should_not be_valid }
   end
 
+  describe "when followed is destroyed" do
+    before { follower.follow!(followed) }
+    it "should destroy associated relationships" do
+      relationships = followed.followers.to_a
+      followed.destroy
+      expect(relationships).not_to be_empty
+      relationships.each do |relationship|
+        expect(Relationship.where(id: relationship.id)).to be_empty
+      end
+    end
+  end
+
 end

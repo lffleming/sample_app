@@ -135,6 +135,11 @@ describe "User pages" do
         end
       end
     end
+
+    describe "profile stats" do
+        it { should have_link("view my profile", href: user_path(user)) }
+        it { should have_content("#{user.microposts.count} micropost") }
+      end
   end
 
   describe "signup" do
