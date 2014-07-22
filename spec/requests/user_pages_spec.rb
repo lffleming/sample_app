@@ -35,6 +35,25 @@ describe "User pages" do
       end
     end
 
+    describe "search" do
+      before do
+        @user = FactoryGirl.create(:user, name: "Lucas Fleming")
+        10.times { FactoryGirl.create(:user) }
+        fill_in "search", with: "Person"
+        click_button "Search User"
+      end
+
+      it "should list all user that match" do
+        User.search("Person").each do |u|
+          expect(page).to have_selector('li', text: u.name)
+        end
+      end
+
+      it "should not list user that don't match" do
+        expect(page).not_to have_selector('li', text: @user.name)
+      end
+    end
+
     describe "delete links" do
 
       it { should_not have_link('delete') }

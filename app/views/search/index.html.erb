@@ -1,0 +1,12 @@
+<% provide(:title, "Search Microposts") %>
+<h1>Search</h1>
+<%= form_tag search_index_path, :class => 'text-center search-form', :method => 'get' do %>
+  <p>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Search"%>
+  </p>
+<% end %>
+<div>
+  <h3 class="text-center">Micropost results</h3>
+  <%= render 'shared/feed' %>
+</div>

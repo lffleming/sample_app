@@ -15,6 +15,14 @@ class Micropost < ActiveRecord::Base
           user_id: user.id, username: user.username)
   end
 
+  def self.search(search)
+    if search
+      where("content LIKE ?", "%#{search}%")
+    else
+      all
+    end
+  end
+
   def reply_to?
     content.start_with?('@')
   end

@@ -233,7 +233,17 @@ input[type=submit] {
   }
 }
 
-/* microposts */
+/* Search Forms */
+
+.search-form input {
+  display: inline;
+  margin: 0;
+}
+.search-form #search {
+  width: 200px;
+}
+
+/* Microposts */
 
 .microposts {
   list-style: none;

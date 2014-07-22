@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   before_action :signup_user, only: [:new, :create]
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.search(params[:search]).paginate(page: params[:page])
   end
 
   def show
