@@ -39,6 +39,21 @@ describe "Micropost pages" do
           micropost.in_reply_to.should == "example"
         end
       end
+
+      describe "with direct mesage" do
+        before do
+         fill_in 'micropost_content', with: "d @recipient direct message"
+         @recipient = FactoryGirl.create(:user, :username => 'recipient')
+        end
+
+        it "should be saved into the direct_messages table instead" do
+          expect { click_button "Post" }.to change(DirectMessage, :count).by(1)
+        end
+
+        it "should not be saved into the microposts table" do
+          expect { click_button "Post" }.not_to change(Micropost, :count).by(1)
+        end
+      end
     end
   end
 

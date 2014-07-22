@@ -1,0 +1,8 @@
+<% provide(:title, "Messages Sent") %>
+<h1>Messages Sent</h1>
+<% if @direct_messages.empty? %>
+<span>No messages sent.</span>
+<% else %>
+<%= render @direct_messages  %>
+<%= will_paginate %>
+<% end %>
