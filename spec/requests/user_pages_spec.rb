@@ -40,7 +40,7 @@ describe "User pages" do
         @user = FactoryGirl.create(:user, name: "Lucas Fleming")
         10.times { FactoryGirl.create(:user) }
         fill_in "search", with: "Person"
-        click_button "Search User"
+        click_button "Search"
       end
 
       it "should list all user that match" do
