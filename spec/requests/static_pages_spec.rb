@@ -32,6 +32,15 @@ describe "Static pages" do
         end
       end
 
+      describe "GET RSS feed" do
+        it "returns an RSS feed" do
+          get root_path, :format => "rss"
+          response.should be_success
+          response.should render_template("static_pages/home")
+          response.content_type.should eq("application/rss+xml")
+        end
+      end
+
       describe "follower/following counts" do
         let(:other_user) { FactoryGirl.create(:user) }
         before do

@@ -105,6 +105,15 @@ describe "User pages" do
       it { should have_content(user.microposts.count) }
     end
 
+    describe "GET RSS feed" do
+        it "returns an RSS feed" do
+          get user_path(user), :format => "rss"
+          response.should be_success
+          response.should render_template("users/show")
+          response.content_type.should eq("application/rss+xml")
+        end
+      end
+
     describe "follow/unfollow buttons" do
       let(:other_user) { FactoryGirl.create(:user) }
       before { sign_in user }
