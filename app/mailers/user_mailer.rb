@@ -14,8 +14,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def signup_confirmation(options)
-    @confirmation_uri =
-      "http://#{options[:host]}#{ confirm_user_path(options[:token]) }"
-    mail(:to => options[:email])
+    @token = options[:token]
+    mail(:to => options[:email], :subject => "Account Confirmation")
   end
 end
