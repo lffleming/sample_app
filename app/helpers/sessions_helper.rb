@@ -22,7 +22,13 @@ module SessionsHelper
   def signed_in_user
     unless signed_in?
       store_location
-      redirect_to signin_url, notice: "Please sign in."
+      respond_to do |format|
+        format.html {
+          redirect_to signin_url, notice: "Please sign in."
+        }
+        format.xml  { render :xml => { error: "Please sign in."} }
+        format.json { render :json => { error: "Please sign in."} }
+      end
     end
   end
 

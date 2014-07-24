@@ -7,11 +7,21 @@ class UsersController < ApplicationController
 
   def index
     @users = User.search(params[:search]).paginate(page: params[:page])
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @users }
+      format.rss
+    end
   end
 
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page])
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => { user: @user, microposts: @microposts } }
+      format.rss
+    end
   end
 
   def new
@@ -27,12 +37,27 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      UserMailer.signup_confirmation(:token => Crypto.encrypt("#{@user.id}"), :email => @user.email).deliver
-      flash[:notice] = "To complete registration, please check your email."
-      redirect_to root_url
+
+      respond_to do |format|
+        format.xml  { render :xml => { user: @user, success: true } }
+        format.json  { render :json => { user: @user, success: true } }
+        format.html {
+          UserMailer.signup_confirmation(:token => Crypto.encrypt("#{@user.id}"), :email => @user.email).deliver
+          flash[:notice] = "To complete registration, please check your email."
+          redirect_to root_url
+        }
+      end
+
     else
-      render 'new'
+
+      respond_to do |format|
+        format.html { render 'new' }
+        format.xml  { render :xml => { user: @user, success: false } }
+        format.json  { render :json => { user: @user, success: false } }
+      end
+
     end
+
   end
 
   def edit
@@ -71,14 +96,21 @@ class UsersController < ApplicationController
     @title = "Following"
     @user = User.find(params[:id])
     @users = @user.followed_users.paginate(page: params[:page])
-    render 'show_follow'
+    respond_to do |format|
+      format.html { render 'show_follow' }
+      format.xml  { render :xml => @users }
+    end
   end
 
   def followers
     @title = "Followers"
     @user = User.find(params[:id])
     @users = @user.followers.paginate(page: params[:page])
-    render 'show_follow'
+    respond_to do |format|
+      format.html { render 'show_follow' }
+      format.xml  { render :xml => @users }
+    end
+
   end
 
    private

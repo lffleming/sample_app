@@ -4,7 +4,6 @@ class MicropostsController < ApplicationController
   before_filter :process_direct_message, :only => :create
 
   def create
-    # @micropost = current_user.microposts.build(micropost_params)
     @micropost.in_reply_to = @micropost.reply_to
     if @micropost.save
       flash[:success] = "Micropost created!"
