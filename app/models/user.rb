@@ -15,8 +15,19 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
 
   has_secure_password
-  validates :password, length: { minimum: 6 }
+  validates :password,  presence: true,
+                        confirmation: true,
+                        length: { minimum: 6 },
+                        :unless => :disable_validation
   validates :username, presence: true, uniqueness: { case_sensitive: false }
+
+  state_machine :state, :initial => :inactive do
+    state :active
+    event :activate do
+      transition :inactive => :active
+    end
+
+  end
 
   def User.new_remember_token
     SecureRandom.urlsafe_base64
@@ -51,6 +62,14 @@ class User < ActiveRecord::Base
     relationships.find_by(followed_id: other_user.id).destroy
   end
 
+  def disable_validation
+    @disable_validation
+  end
+
+  def disable_validation=(value)
+    @disable_validation = value
+  end
+
   def send_password_reset
     generate_token(:password_reset_token)
     self.password_reset_sent_at = Time.zone.now
@@ -68,5 +87,9 @@ class User < ActiveRecord::Base
 
     def create_remember_token
       self.remember_token = User.digest(User.new_remember_token)
+    end
+
+    def password_is_not_being_updated?
+      self.id && self.password.blank?
     end
 end

@@ -12,4 +12,10 @@ class UserMailer < ActionMailer::Base
     @follower = follower
     mail(:to => "#{user.name} <#{user.email}>", :subject => "You have a new follower!")
   end
+
+  def signup_confirmation(options)
+    @confirmation_uri =
+      "http://#{options[:host]}#{ confirm_user_path(options[:token]) }"
+    mail(:to => options[:email])
+  end
 end

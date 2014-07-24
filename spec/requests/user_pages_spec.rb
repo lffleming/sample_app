@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'crypto'
 
 describe "User pages" do
 
@@ -82,13 +83,6 @@ describe "User pages" do
     end
   end
 
-  describe "signup page" do
-    before { visit signup_path }
-
-    it { should have_content ('Sign up') }
-    it { should have_content ('Sign up') }
-  end
-
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
     let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
@@ -170,10 +164,12 @@ describe "User pages" do
       end
   end
 
-  describe "signup" do
+  describe "signup page" do
     before { visit signup_path }
-
     let(:submit) { "Create my account" }
+
+    it { should have_content ('Sign up') }
+    it { should have_content ('Sign up') }
 
     describe "with invalid information" do
       it "should not create a user" do
@@ -195,16 +191,59 @@ describe "User pages" do
         expect { click_button submit }.to change(User, :count).by(1)
       end
 
+      it "state should be inactive" do
+        click_button submit
+        @user = User.find_by(email: 'user@example.com')
+        @user.state.should == "inactive"
+      end
+
       describe "after saving the user" do
         before { click_button submit }
-        let(:user) { User.find_by(email: 'user@example.com') }
 
-        it { should have_link('Sign out') }
-        it { should have_title(user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should have_link('Sign in') }
+        it { should have_selector('div.alert.alert-notice', text: 'To complete registration') }
+      end
+    end
+
+    describe "confirmations" do
+      describe "when user signs up" do
+        before do
+          visit signup_path
+          create_user
+          click_button submit
+        end
+        describe "when account is not activated and sign in" do
+          let(:new_user) { User.last }
+          before do
+            new_user.password = "foobar"
+            sign_in new_user
+          end
+          it { should have_link('Sign in') }
+          it { should have_selector('div.alert.alert-error', text: "Your account") }
+        end
+
+        describe "when user activates account" do
+          before do
+            @token = Crypto.encrypt( "#{ User.last.id }" )
+            visit confirm_user_path(@token)
+          end
+
+          describe "can sign in" do
+            it { should have_selector('div.alert.alert-success', text: 'Account confirmed') }
+            it { should have_link('Sign out') }
+          end
+
+          describe "the token expires" do
+            before { visit confirm_user_path(@token) }
+            it { should have_link('Sign in') }
+            it { should have_selector('div.alert', text: 'Account is already activated') }
+          end
+        end
+
       end
     end
   end
+
 
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }

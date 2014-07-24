@@ -16,6 +16,7 @@ describe User do
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:admin) }
+  it { should respond_to(:state) }
   it { should respond_to(:notification) }
   it { should respond_to(:microposts) }
   it { should respond_to(:feed) }
@@ -157,6 +158,14 @@ describe User do
   describe "remember token" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+  describe "#activate!" do
+    it "should change the user's state from inactive to active" do
+      @user.state = "inactive"
+      @user.activate!
+      @user.reload.state.should == "active"
+    end
   end
 
   describe "micropost associations" do

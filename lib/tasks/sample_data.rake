@@ -15,7 +15,8 @@ def make_users
                       password: "foobar",
                       password_confirmation: "foobar",
                       admin: true,
-                      notification: true)
+                      state: "active",
+                      notification: false)
   99.times do |n|
     name  = Faker::Name.name
     username = "example-#{n+1}"
@@ -25,8 +26,9 @@ def make_users
                 username: username,
                 email:    email,
                 password: password,
+                state: "active",
                 password_confirmation: password,
-                notification: true)
+                notification: false)
   end
 end
 

@@ -37,4 +37,15 @@ describe UserMailer do
       end
     end
   end
+
+  describe "signup confirmation" do
+    before do
+      visit signup_path
+      create_user
+      click_button "Create my account"
+    end
+    it "should be emailed" do
+      EMAILS.last.to.should include("user@example.com")
+    end
+  end
 end
