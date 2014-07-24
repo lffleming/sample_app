@@ -20,7 +20,7 @@ def make_admin
                       password_confirmation: "foobar",
                       admin: true,
                       state: "active",
-                      notification: false)1190
+                      notification: false)
 end
 
 def make_users
