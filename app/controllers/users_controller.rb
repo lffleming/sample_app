@@ -42,6 +42,7 @@ class UsersController < ApplicationController
         format.xml  { render :xml => { user: @user, success: true } }
         format.json  { render :json => { user: @user, success: true } }
         format.html {
+          @user.activate # Temporario (Apenas pra poder se cadastrar sem confirmar por email)
           UserMailer.signup_confirmation(:token => Crypto.encrypt("#{@user.id}"), :email => @user.email).deliver
           flash[:notice] = "To complete registration, please check your email."
           redirect_to root_url
